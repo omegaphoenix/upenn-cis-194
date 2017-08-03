@@ -43,5 +43,11 @@ sumDigitsHelper [] =
 sumDigitsHelper (x:xs) =
   x + (sumDigitsHelper xs)
 
+-- Exercise 4
+-- Check if valid credit card number
+validate :: Integer -> Bool
+validate inputNum =
+  (mod (sumDigits (doubleEveryOther (toDigits inputNum))) 10) == 0
+
 main :: IO()
-main = print (sumDigits (doubleEveryOther (toDigits 8765)))
+main = print (validate 4012888888881882)
