@@ -30,5 +30,18 @@ doubleEveryOtherHelper (x:[]) =
 doubleEveryOtherHelper (x:(y:zs)) =
   (doubleEveryOtherHelper zs) ++ ((2 * y) : [x])
 
+-- Exercise 3
+sumDigits :: [Integer] -> Integer
+sumDigits [] =
+  0
+sumDigits (x:xs) =
+  (sumDigitsHelper (toDigits x)) + (sumDigits xs)
+
+sumDigitsHelper :: [Integer] -> Integer
+sumDigitsHelper [] =
+  0
+sumDigitsHelper (x:xs) =
+  x + (sumDigitsHelper xs)
+
 main :: IO()
-main = print (doubleEveryOther (toDigits 12345678))
+main = print (sumDigits (doubleEveryOther (toDigits 8765)))
