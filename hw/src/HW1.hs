@@ -6,6 +6,7 @@ module HW1
   , sumDigits
   , validate
   , hanoi
+  , hanoiFour
   ) where
 
 -- Exercise 1
@@ -50,7 +51,7 @@ sumDigits :: [Integer] -> Integer
 sumDigits [] =
   0
 sumDigits (x:xs) =
-  (sumDigitsHelper (toDigits x)) + (sumDigits xs)
+  (sumDigitsHelper (toDigits (abs x))) + (sumDigits xs)
 
 -- Add up integers
 sumDigitsHelper :: [Integer] -> Integer
@@ -86,3 +87,12 @@ moveDisks 0 _ _ =
   []
 moveDisks n peg1 peg2 =
   (peg1, peg2) : (moveDisks (n - 1) peg1 peg2)
+
+-- Exercise 6
+hanoiFour :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
+hanoiFour 1 peg1 _ _ peg4 =
+  [(peg1, peg4)]
+hanoiFour numDisks peg1 peg2 peg3 _ =
+  (hanoi (numDisks - 1) peg1 peg2 peg3)
+  ++ (moveDisks 1 peg1 peg2)
+  ++ (hanoi (numDisks - 1) peg3 peg1 peg2)
