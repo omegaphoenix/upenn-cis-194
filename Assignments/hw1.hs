@@ -68,7 +68,9 @@ hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
 hanoi 1 peg1 _ peg3 =
   [(peg1, peg3)]
 hanoi numDisks peg1 peg2 peg3 =
-  (hanoi (numDisks - 1) peg1 peg2 peg3) ++ (moveDisks 1 peg1 peg2) ++ (hanoi (numDisks - 1) peg3 peg1 peg2)
+  (hanoi (numDisks - 1) peg1 peg2 peg3)
+  ++ (moveDisks 1 peg1 peg2)
+  ++ (hanoi (numDisks - 1) peg3 peg1 peg2)
 
 -- Move n disks
 moveDisks :: Integer -> Peg -> Peg -> [Move]
@@ -79,4 +81,4 @@ moveDisks n peg1 peg2 =
 
 
 main :: IO()
-main = print (hanoi 2 "a" "b" "c")
+main = print (length (hanoi 8 "a" "b" "c"))
