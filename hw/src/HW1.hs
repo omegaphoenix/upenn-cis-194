@@ -12,18 +12,14 @@ module HW1
 -- Exercise 1
 -- Convert integer to list of digits
 toDigits :: Integer -> [Integer]
-toDigits inputNum =
-  case inputNum > 0 of
-    True ->
-      toDigitsHelper inputNum []
-    False ->
-      []
+toDigits inputNum
+  | inputNum > 0 = toDigitsHelper inputNum []
+  | otherwise = []
 
 toDigitsHelper :: Integer -> [Integer] -> [Integer]
-toDigitsHelper 0 currOutput =
-  currOutput
-toDigitsHelper num currOutput =
-  toDigitsHelper (div num 10) ((mod num 10) : currOutput)
+toDigitsHelper num currOutput
+  | num == 0 = currOutput
+  | otherwise = toDigitsHelper (div num 10) ((mod num 10) : currOutput)
 
 -- Convert integer to list of digits reversed
 toDigitsRev :: Integer -> [Integer]
@@ -64,7 +60,8 @@ sumDigitsHelper (x:xs) =
 -- Check if valid credit card number
 validate :: Integer -> Bool
 validate inputNum =
-  (mod (sumDigits (doubleEveryOther (toDigits inputNum))) 10) == 0
+  inputNum >= 0
+  && (mod (sumDigits (doubleEveryOther (toDigits inputNum))) 10) == 0
 
 -- Exercise 5
 -- Name of peg
@@ -72,27 +69,27 @@ type Peg = String
 -- A move is moving the top disk from first peg to second peg
 type Move = (Peg, Peg)
 
--- Return list of moves to solve towers of hanoi
+-- Return list of moves to solve towers of hanoi from src to dst
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi 1 peg1 _ peg3 =
-  [(peg1, peg3)]
-hanoi numDisks peg1 peg2 peg3 =
-  (hanoi (numDisks - 1) peg1 peg2 peg3)
-  ++ (moveDisks 1 peg1 peg2)
-  ++ (hanoi (numDisks - 1) peg3 peg1 peg2)
+hanoi numDisks src dst tmp
+  | numDisks <= 0 = []
+  | numDisks == 1 = moveDisk src dst
+  | otherwise = (hanoi (numDisks - 1) src tmp dst)
+              ++ moveDisk src dst
+              ++ (hanoi (numDisks - 1) tmp dst src)
 
--- Move n disks
-moveDisks :: Integer -> Peg -> Peg -> [Move]
-moveDisks 0 _ _ =
-  []
-moveDisks n peg1 peg2 =
-  (peg1, peg2) : (moveDisks (n - 1) peg1 peg2)
+-- Move 1 disk from src to dst
+moveDisk :: Peg -> Peg -> [Move]
+moveDisk src dst =
+  [(src, dst)]
 
 -- Exercise 6
+-- Solve Towers of Hanoi with 4 pegs in minimal number of moves
 hanoiFour :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
-hanoiFour 1 peg1 _ _ peg4 =
-  [(peg1, peg4)]
-hanoiFour numDisks peg1 peg2 peg3 _ =
-  (hanoi (numDisks - 1) peg1 peg2 peg3)
-  ++ (moveDisks 1 peg1 peg2)
-  ++ (hanoi (numDisks - 1) peg3 peg1 peg2)
+hanoiFour numDisks src dst tmp1 tmp2
+  | numDisks <= 0 = []
+  | numDisks == 1 = [(src, dst)]
+  | otherwise = hanoiFour k src tmp1 dst tmp2
+              ++ hanoi (numDisks - k) src dst tmp2
+              ++ hanoiFour k tmp1 dst src tmp2
+              where k = numDisks - round(sqrt.fromInteger$(2 * numDisks + 1) :: Double) + 1

@@ -49,17 +49,23 @@ exercise4 =
   describe "validate" $ do
     it ("validates   " ++ show baseCard) $ validate baseCard `shouldBe` True
     it ("invalidates " ++ (show . (+ 1)) baseCard) $ validate (baseCard + 1) `shouldBe` False
+    it ("invalidates " ++ show (baseCard * (-1))) $ validate (baseCard * (-1)) `shouldBe` False
 
 exercise5 :: Spec
 exercise5 =
   describe "hanoi" $ do
-    it "Solves 1" $ hanoi 1 "x" "y" "z" `shouldBe` [("x", "z")]
+    it "Handles negative" $ hanoi (-10) "x" "y" "z" `shouldBe` []
+    it "Handles 0" $ hanoi 0 "x" "y" "z" `shouldBe` []
+    it "Solves 1" $ hanoi 1 "x" "y" "z" `shouldBe` [("x", "y")]
     it "Solves 2" $ hanoi 2 "a" "b" "c" `shouldBe` [("a", "c"), ("a", "b"), ("c", "b")]
     it "Solves 15 in minimum number of moves" $ length (hanoi 15 "a" "b" "c") `shouldBe` 32767
 
 exercise6 :: Spec
 exercise6 =
   describe "hanoi four pegs" $ do
-    it "Solves 1" $ hanoiFour 1 "w" "x" "y" "z" `shouldBe` [("w", "z")]
-    it "Solves 2" $ length (hanoiFour 2 "a" "b" "c", "d") `shouldBe` 3
+    it "Handles negative" $ hanoiFour (-1) "w" "x" "y" "z" `shouldBe` []
+    it "Handles 0" $ hanoiFour 0 "w" "x" "y" "z" `shouldBe` []
+    it "Solves 1" $ hanoiFour 1 "w" "x" "y" "z" `shouldBe` [("w", "x")]
+    it "Solves 2 in minimum number of moves" $ length (hanoiFour 2 "a" "b" "c" "d") `shouldBe` 3
+    it "Solves 3 in minimum number of moves" $ length (hanoiFour 3 "a" "b" "c" "d") `shouldBe` 5
     it "Solves 15 in minimum number of moves" $ length (hanoiFour 15 "a" "b" "c" "d") `shouldBe` 129
